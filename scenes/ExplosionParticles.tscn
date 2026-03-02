@@ -1,0 +1,35 @@
+[gd_scene load_steps=3 format=3 uid="uid://c5particle"]
+
+[ext_resource type="Script" path="res://scripts/ExplosionParticles.gd" id="1_part"]
+
+[sub_resource type="Gradient" id="Gradient_1"]
+interpolation_mode = 2
+offsets = PackedFloat32Array(0, 0.3, 0.7, 1)
+colors = PackedColorArray(1, 0.9, 0.3, 1, 1, 0.5, 0.1, 1, 1, 0.2, 0.1, 0.5, 1, 0.1, 0.1, 0)
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_1"]
+emission_shape = 1
+emission_sphere_radius = 5.0
+direction = Vector3(0, 0, 0)
+spread = 180.0
+initial_velocity_min = 100.0
+initial_velocity_max = 200.0
+gravity = Vector3(0, 0, 0)
+scale_min = 2.0
+scale_max = 4.0
+color = Color(1, 0.8, 0.2, 1)
+color_ramp = SubResource("Gradient_1")
+
+[node name="ExplosionParticles" type="GPUParticles2D"]
+emitting = true
+amount = 20
+one_shot = true
+explosiveness = 1.0
+lifetime = 0.5
+script = ExtResource("1_part")
+process_material = SubResource("ParticleProcessMaterial_1")
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 1.0
+one_shot = true
+autostart = true
