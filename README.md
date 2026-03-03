@@ -10,6 +10,7 @@ A classic brick breaker game built with Godot Engine 4.6.
 
 - Classic brick-breaking gameplay
 - Smooth paddle controls (Arrow keys or A/D)
+- **Skill system with energy bar (J/K/L keys)**
 - Particle explosion effects
 - Screen shake feedback
 - Score system with floating text
@@ -24,7 +25,20 @@ A classic brick breaker game built with Godot Engine 4.6.
 |-----|--------|
 | ← / A | Move paddle left |
 | → / D | Move paddle right |
+| J | Hold to shrink paddle (50% width) - consumes energy |
+| K | Hold to extend paddle (double width) - consumes energy |
+| L | Clear bottom row of bricks - requires full energy |
 | R | Restart game (when game over) |
+
+## Skill System
+
+The game features an energy-based skill system:
+
+- **Energy Bar**: Located on the right side of the screen
+- **Energy Regeneration**: Energy automatically regenerates when not using skills
+- **J Skill (Shrink)**: Hold J to shrink the paddle to 50% width - useful for precise control
+- **K Skill (Extend)**: Hold K to extend the paddle to double width - helps catch the ball
+- **L Skill (Clear Bottom Row)**: Press L when energy is full to instantly destroy the bottom row of bricks
 
 ## Requirements
 
@@ -42,18 +56,33 @@ A classic brick breaker game built with Godot Engine 4.6.
 
 ```
 Galactic Ball/
-├── scenes/           # Godot scene files
-│   ├── Ball.tscn
-│   ├── Brick.tscn
-│   ├── Main.tscn
-│   ├── Paddle.tscn
-│   └── ...
-├── scripts/          # GDScript files
-│   ├── Ball.gd
-│   ├── Brick.gd
-│   ├── Main.gd
-│   └── ...
-├── project.godot     # Godot project file
+├── scenes/                 # Godot scene files
+│   ├── actors/             # Game entities
+│   │   ├── enemies/
+│   │   │   └── Brick.tscn
+│   │   └── player/
+│   │       ├── Ball.tscn
+│   │       └── Paddle.tscn
+│   └── system/             # System scenes
+│       ├── ExplosionParticles.tscn
+│       ├── FireTrail.tscn
+│       ├── GameWorld.tscn
+│       ├── GlassShards.tscn
+│       ├── StarBackground.tscn
+│       └── TrailParticle.tscn
+├── scripts/                # GDScript files
+│   ├── components/         # Game component scripts
+│   │   ├── Ball.gd
+│   │   ├── Brick.gd
+│   │   └── Paddle.gd
+│   └── utils/              # Utility scripts
+│       ├── ExplosionParticles.gd
+│       ├── FireTrail.gd
+│       ├── GlassShards.gd
+│       ├── Main.gd
+│       ├── StarBackground.gd
+│       └── TrailParticle.gd
+├── project.godot           # Godot project file
 └── README.md
 ```
 
@@ -79,6 +108,7 @@ Created with Godot Engine
 
 - 经典打砖块玩法
 - 流畅的挡板控制（方向键或 A/D）
+- **技能系统与能量条（J/K/L 键）**
 - 粒子爆炸效果
 - 屏幕震动反馈
 - 分数系统与浮动文字
@@ -93,7 +123,20 @@ Created with Godot Engine
 |------|------|
 | ← / A | 挡板左移 |
 | → / D | 挡板右移 |
+| J | 按住缩小挡板（50%宽度）- 消耗能量 |
+| K | 按住加长挡板（双倍宽度）- 消耗能量 |
+| L | 清除最下面一排砖块 - 需要满能量 |
 | R | 重新开始游戏（游戏结束时） |
+
+## 技能系统
+
+游戏拥有基于能量的技能系统：
+
+- **能量条**：位于屏幕右侧
+- **能量恢复**：不使用时自动恢复能量
+- **J 技能（缩小）**：按住 J 将挡板缩小至50%宽度 - 适合精准控制
+- **K 技能（加长）**：按住 K 将挡板加长至双倍宽度 - 更容易接球
+- **L 技能（清底）**：能量满时按 L 瞬间清除最下面一排砖块
 
 ## 运行要求
 
@@ -111,18 +154,33 @@ Created with Godot Engine
 
 ```
 Galactic Ball/
-├── scenes/           # Godot 场景文件
-│   ├── Ball.tscn
-│   ├── Brick.tscn
-│   ├── Main.tscn
-│   ├── Paddle.tscn
-│   └── ...
-├── scripts/          # GDScript 脚本文件
-│   ├── Ball.gd
-│   ├── Brick.gd
-│   ├── Main.gd
-│   └── ...
-├── project.godot     # Godot 项目文件
+├── scenes/                 # Godot 场景文件
+│   ├── actors/             # 游戏实体
+│   │   ├── enemies/
+│   │   │   └── Brick.tscn
+│   │   └── player/
+│   │       ├── Ball.tscn
+│   │       └── Paddle.tscn
+│   └── system/             # 系统场景
+│       ├── ExplosionParticles.tscn
+│       ├── FireTrail.tscn
+│       ├── GameWorld.tscn
+│       ├── GlassShards.tscn
+│       ├── StarBackground.tscn
+│       └── TrailParticle.tscn
+├── scripts/                # GDScript 脚本文件
+│   ├── components/         # 游戏组件脚本
+│   │   ├── Ball.gd
+│   │   ├── Brick.gd
+│   │   └── Paddle.gd
+│   └── utils/              # 工具脚本
+│       ├── ExplosionParticles.gd
+│       ├── FireTrail.gd
+│       ├── GlassShards.gd
+│       ├── Main.gd
+│       ├── StarBackground.gd
+│       └── TrailParticle.gd
+├── project.godot           # Godot 项目文件
 └── README.md
 ```
 
