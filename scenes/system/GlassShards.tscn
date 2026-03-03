@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://c8glassshards"]
 
-[ext_resource type="Script" path="res://scripts/GlassShards.gd" id="1_shards"]
+[ext_resource type="Script" path="res://scripts/utils/GlassShards.gd" id="1_shards"]
 
 [sub_resource type="Gradient" id="Gradient_1"]
 interpolation_mode = 0

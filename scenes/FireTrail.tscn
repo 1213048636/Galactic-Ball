@@ -1,11 +1,6 @@
-[gd_scene format=3 uid="uid://c7firetrail"]
+[gd_scene format=3 uid="uid://dtwrqr4rc5w12"]
 
 [ext_resource type="Script" path="res://scripts/FireTrail.gd" id="1_fire"]
-
-[sub_resource type="Gradient" id="Gradient_1"]
-interpolation_mode = 2
-offsets = PackedFloat32Array(0, 0.3, 0.6, 1)
-colors = PackedColorArray(1, 1, 0.8, 1, 1, 0.8, 0.2, 0.8, 1, 0.4, 0.1, 0.5, 0.8, 0.1, 0.1, 0)
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_1"]
 emission_shape = 1
@@ -17,11 +12,10 @@ initial_velocity_max = 100.0
 gravity = Vector3(0, -50, 0)
 scale_min = 4.0
 scale_max = 8.0
-color_ramp = SubResource("Gradient_1")
 
-[node name="FireTrail" type="GPUParticles2D"]
+[node name="FireTrail" type="GPUParticles2D" unique_id=1134195087]
 amount = 50
 lifetime = 0.4
 preprocess = 0.1
-script = ExtResource("1_fire")
 process_material = SubResource("ParticleProcessMaterial_1")
+script = ExtResource("1_fire")

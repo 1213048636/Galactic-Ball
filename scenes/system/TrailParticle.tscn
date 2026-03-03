@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://c6trail"]
+
+[ext_resource type="Script" path="res://scripts/utils/TrailParticle.gd" id="1_trail"]
+
+[node name="TrailParticle" type="GPUParticles2D"]
+emitting = true
+amount = 30
+lifetime = 0.2
+script = ExtResource("1_trail")

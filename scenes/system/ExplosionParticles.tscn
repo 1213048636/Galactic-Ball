@@ -1,6 +1,6 @@
-[gd_scene load_steps=3 format=3 uid="uid://c5particle"]
+[gd_scene format=3 uid="uid://c5particle"]
 
-[ext_resource type="Script" path="res://scripts/ExplosionParticles.gd" id="1_part"]
+[ext_resource type="Script" path="res://scripts/utils/ExplosionParticles.gd" id="1_part"]
 
 [sub_resource type="Gradient" id="Gradient_1"]
 interpolation_mode = 2

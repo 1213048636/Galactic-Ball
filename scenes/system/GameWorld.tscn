@@ -1,0 +1,331 @@
+[gd_scene format=3 uid="uid://d4kllwl6juoxu"]
+
+[ext_resource type="Script" path="res://scripts/utils/Main.gd" id="1_main"]
+[ext_resource type="PackedScene" uid="uid://c8yvxg3ulq3a" path="res://scenes/actors/player/Paddle.tscn" id="2_paddle"]
+[ext_resource type="PackedScene" uid="uid://c9starbg" path="res://scenes/system/StarBackground.tscn" id="3_starbg"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_energy_bg"]
+bg_color = Color(0.1, 0.1, 0.2, 0.8)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.2, 0.6, 0.9, 0.5)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_energy_fill"]
+bg_color = Color(0.2, 0.9, 1, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.5, 1, 1, 1)
+
+[node name="Main" type="Node2D"]
+script = ExtResource("1_main")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(640, 360)
+enabled = true
+
+[node name="GameArea" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 640.0
+offset_bottom = 720.0
+
+[node name="Background" type="ColorRect" parent="GameArea"]
+layout_mode = 0
+offset_right = 640.0
+offset_bottom = 720.0
+color = Color(0.02, 0.02, 0.08, 1)
+
+[node name="StarBackground" parent="GameArea" instance=ExtResource("3_starbg")]
+
+[node name="GameOverOverlay" type="ColorRect" parent="GameArea"]
+visible = false
+z_index = 100
+layout_mode = 0
+offset_right = 640.0
+offset_bottom = 720.0
+color = Color(0.8, 0.1, 0.1, 0.7)
+
+[node name="GameOverText" type="Label" parent="GameArea/GameOverOverlay"]
+layout_mode = 0
+offset_left = 120.0
+offset_top = 300.0
+offset_right = 520.0
+offset_bottom = 420.0
+theme_override_font_sizes/font_size = 48
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+text = "游戏结束
+按 R 重新开始"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Paddle" parent="GameArea" instance=ExtResource("2_paddle")]
+position = Vector2(320, 680)
+
+[node name="InfoPanel" type="ColorRect" parent="."]
+offset_left = 640.0
+offset_right = 1280.0
+offset_bottom = 720.0
+color = Color(0.05, 0.05, 0.1, 1)
+
+[node name="PanelBorder" type="ColorRect" parent="InfoPanel"]
+layout_mode = 0
+offset_right = 4.0
+offset_bottom = 720.0
+color = Color(0.2, 0.8, 1, 0.5)
+
+[node name="TitleLabel" type="Label" parent="InfoPanel"]
+layout_mode = 0
+offset_left = 40.0
+offset_top = 30.0
+offset_right = 600.0
+offset_bottom = 80.0
+theme_override_font_sizes/font_size = 36
+theme_override_colors/font_color = Color(0.2, 0.9, 1, 1)
+text = "星际弹球"
+horizontal_alignment = 1
+
+[node name="ScoreSection" type="Control" parent="InfoPanel"]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 40.0
+offset_top = 100.0
+offset_right = 600.0
+offset_bottom = 200.0
+
+[node name="ScoreTitle" type="Label" parent="InfoPanel/ScoreSection"]
+layout_mode = 0
+offset_right = 200.0
+offset_bottom = 40.0
+theme_override_font_sizes/font_size = 24
+theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
+text = "分数"
+
+[node name="ScoreLabel" type="Label" parent="InfoPanel/ScoreSection"]
+layout_mode = 0
+offset_top = 35.0
+offset_right = 560.0
+offset_bottom = 85.0
+theme_override_font_sizes/font_size = 48
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+text = "0"
+
+[node name="EnergySection" type="Control" parent="InfoPanel"]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 40.0
+offset_top = 200.0
+offset_right = 600.0
+offset_bottom = 300.0
+
+[node name="EnergyTitle" type="Label" parent="InfoPanel/EnergySection"]
+layout_mode = 0
+offset_right = 200.0
+offset_bottom = 40.0
+theme_override_font_sizes/font_size = 24
+theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
+text = "能量"
+
+[node name="EnergyBar" type="ProgressBar" parent="InfoPanel/EnergySection"]
+layout_mode = 0
+offset_top = 40.0
+offset_right = 560.0
+offset_bottom = 70.0
+theme_override_styles/background = SubResource("StyleBoxFlat_energy_bg")
+theme_override_styles/fill = SubResource("StyleBoxFlat_energy_fill")
+max_value = 100.0
+value = 100.0
+show_percentage = false
+
+[node name="SkillsSection" type="Control" parent="InfoPanel"]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 40.0
+offset_top = 320.0
+offset_right = 600.0
+offset_bottom = 490.0
+
+[node name="SkillsTitle" type="Label" parent="InfoPanel/SkillsSection"]
+layout_mode = 0
+offset_right = 200.0
+offset_bottom = 40.0
+theme_override_font_sizes/font_size = 24
+theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
+text = "技能"
+
+[node name="SkillJ" type="Label" parent="InfoPanel/SkillsSection"]
+layout_mode = 0
+offset_top = 50.0
+offset_right = 560.0
+offset_bottom = 80.0
+theme_override_font_sizes/font_size = 20
+theme_override_colors/font_color = Color(0.9, 0.3, 0.3, 1)
+text = "[J] 红色挡板 - 速度提升"
+
+[node name="SkillK" type="Label" parent="InfoPanel/SkillsSection"]
+layout_mode = 0
+offset_top = 85.0
+offset_right = 560.0
+offset_bottom = 115.0
+theme_override_font_sizes/font_size = 20
+theme_override_colors/font_color = Color(0.3, 0.9, 0.3, 1)
+text = "[K] 加长挡板 - 双倍宽度"
+
+[node name="SkillL" type="Label" parent="InfoPanel/SkillsSection"]
+layout_mode = 0
+offset_top = 120.0
+offset_right = 560.0
+offset_bottom = 150.0
+theme_override_font_sizes/font_size = 20
+theme_override_colors/font_color = Color(0.3, 0.6, 0.9, 1)
+text = "[L] 清底一排 - 满能量可用"
+
+[node name="BricksSection" type="Control" parent="InfoPanel"]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 40.0
+offset_top = 520.0
+offset_right = 600.0
+offset_bottom = 690.0
+
+[node name="BricksTitle" type="Label" parent="InfoPanel/BricksSection"]
+layout_mode = 0
+offset_right = 200.0
+offset_bottom = 40.0
+theme_override_font_sizes/font_size = 24
+theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
+text = "砖块类型"
+
+[node name="RedBrick" type="Label" parent="InfoPanel/BricksSection"]
+layout_mode = 0
+offset_top = 45.0
+offset_right = 560.0
+offset_bottom = 75.0
+theme_override_font_sizes/font_size = 18
+theme_override_colors/font_color = Color(0.9, 0.3, 0.3, 1)
+text = "红色 - 200% 速度提升"
+
+[node name="GreenBrick" type="Label" parent="InfoPanel/BricksSection"]
+layout_mode = 0
+offset_top = 80.0
+offset_right = 560.0
+offset_bottom = 110.0
+theme_override_font_sizes/font_size = 18
+theme_override_colors/font_color = Color(0.3, 0.9, 0.3, 1)
+text = "绿色 - 穿透模式 (5秒/3个)"
+
+[node name="WhiteBrick" type="Label" parent="InfoPanel/BricksSection"]
+layout_mode = 0
+offset_top = 115.0
+offset_right = 560.0
+offset_bottom = 145.0
+theme_override_font_sizes/font_size = 18
+theme_override_colors/font_color = Color(0.9, 0.9, 0.9, 1)
+text = "白色 - 普通"
+
+[node name="BrickPreview" type="Control" parent="InfoPanel"]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 680.0
+offset_top = 100.0
+offset_right = 1280.0
+offset_bottom = 400.0
+
+[node name="PreviewTitle" type="Label" parent="InfoPanel/BrickPreview"]
+layout_mode = 0
+offset_left = 40.0
+offset_top = 0.0
+offset_right = 200.0
+offset_bottom = 40.0
+theme_override_font_sizes/font_size = 24
+theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
+text = "砖块预览"
+
+[node name="RedBrick1" type="ColorRect" parent="InfoPanel/BrickPreview"]
+layout_mode = 0
+offset_left = 40.0
+offset_top = 50.0
+offset_right = 100.0
+offset_bottom = 75.0
+color = Color(0.9, 0.3, 0.3, 1)
+
+[node name="RedBrick2" type="ColorRect" parent="InfoPanel/BrickPreview"]
+layout_mode = 0
+offset_left = 110.0
+offset_top = 50.0
+offset_right = 170.0
+offset_bottom = 75.0
+color = Color(0.9, 0.3, 0.3, 1)
+
+[node name="RedBrick3" type="ColorRect" parent="InfoPanel/BrickPreview"]
+layout_mode = 0
+offset_left = 180.0
+offset_top = 50.0
+offset_right = 240.0
+offset_bottom = 75.0
+color = Color(0.9, 0.3, 0.3, 1)
+
+[node name="GreenBrick1" type="ColorRect" parent="InfoPanel/BrickPreview"]
+layout_mode = 0
+offset_left = 40.0
+offset_top = 85.0
+offset_right = 100.0
+offset_bottom = 110.0
+color = Color(0.3, 0.9, 0.3, 1)
+
+[node name="GreenBrick2" type="ColorRect" parent="InfoPanel/BrickPreview"]
+layout_mode = 0
+offset_left = 110.0
+offset_top = 85.0
+offset_right = 170.0
+offset_bottom = 110.0
+color = Color(0.3, 0.9, 0.3, 1)
+
+[node name="GreenBrick3" type="ColorRect" parent="InfoPanel/BrickPreview"]
+layout_mode = 0
+offset_left = 180.0
+offset_top = 85.0
+offset_right = 240.0
+offset_bottom = 110.0
+color = Color(0.3, 0.9, 0.3, 1)
+
+[node name="WhiteBrick1" type="ColorRect" parent="InfoPanel/BrickPreview"]
+layout_mode = 0
+offset_left = 40.0
+offset_top = 120.0
+offset_right = 100.0
+offset_bottom = 145.0
+color = Color(0.9, 0.9, 0.9, 1)
+
+[node name="WhiteBrick2" type="ColorRect" parent="InfoPanel/BrickPreview"]
+layout_mode = 0
+offset_left = 110.0
+offset_top = 120.0
+offset_right = 170.0
+offset_bottom = 145.0
+color = Color(0.9, 0.9, 0.9, 1)
+
+[node name="WhiteBrick3" type="ColorRect" parent="InfoPanel/BrickPreview"]
+layout_mode = 0
+offset_left = 180.0
+offset_top = 120.0
+offset_right = 240.0
+offset_bottom = 145.0
+color = Color(0.9, 0.9, 0.9, 1)
+
+[node name="GameOverLabel" type="Label" parent="InfoPanel"]
+visible = false
+layout_mode = 0
+offset_left = 40.0
+offset_top = 300.0
+offset_right = 600.0
+offset_bottom = 400.0
+theme_override_font_sizes/font_size = 36
+theme_override_colors/font_color = Color(1, 0.2, 0.2, 1)
+text = "游戏结束
+按 R 重新开始"
+horizontal_alignment = 1
+vertical_alignment = 1
