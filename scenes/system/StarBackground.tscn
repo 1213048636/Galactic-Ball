@@ -1,9 +1,8 @@
 [gd_scene format=3 uid="uid://dastarbg"]
 
-[ext_resource type="Script" path="res://scripts/utils/StarBackground.gd" id="1_star"]
+[ext_resource type="Script" uid="uid://dq6ccsv32djry" path="res://scripts/utils/StarBackground.gd" id="1_star"]
 
 [sub_resource type="Gradient" id="Gradient_bg"]
-interpolation_mode = 0
 colors = PackedColorArray(0.02, 0.02, 0.08, 1, 0.05, 0.05, 0.15, 1)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_bg"]
@@ -19,27 +18,24 @@ emission_shape = 3
 emission_box_extents = Vector3(576, 324, 1)
 direction = Vector3(0, 0, 0)
 spread = 0.0
-initial_velocity_min = 0.0
-initial_velocity_max = 0.0
 gravity = Vector3(0, 0, 0)
-scale_min = 1.0
 scale_max = 3.0
-color = Color(1, 1, 1, 1)
 
-[node name="StarBackground" type="Node2D"]
+[node name="StarBackground" type="Node2D" unique_id=755689512]
 script = ExtResource("1_star")
 
-[node name="Background" type="Sprite2D" parent="."]
-position = Vector2(576, 324)
+[node name="Background" type="Sprite2D" parent="." unique_id=667092616]
+position = Vector2(637.5, 364)
+scale = Vector2(1.1067709, 1.1234568)
 texture = SubResource("GradientTexture2D_bg")
 
-[node name="Stars" type="GPUParticles2D" parent="."]
+[node name="Stars" type="GPUParticles2D" parent="." unique_id=325394628]
 position = Vector2(576, 324)
 amount = 100
 lifetime = 2.0
 preprocess = 2.0
 process_material = SubResource("ParticleProcessMaterial_stars")
 
-[node name="TwinkleTimer" type="Timer" parent="."]
+[node name="TwinkleTimer" type="Timer" parent="." unique_id=2047376494]
 wait_time = 0.1
 autostart = true

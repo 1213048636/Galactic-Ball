@@ -103,15 +103,19 @@ func activate_piercing():
 	is_piercing = true
 	pierce_timer = pierce_duration
 	pierce_count = 0
-	# 视觉反馈：改变球的颜色或添加特效
-	modulate = Color(0.2, 1, 0.2, 1)  # 变绿色
+	$OuterGlow.modulate = Color(0.2, 1, 0.4, 1)
+	$InnerGlow.modulate = Color(0.4, 1, 0.6, 1)
+	$Core.modulate = Color(0.6, 1, 0.8, 1)
+	$FireTrail.modulate = Color(0.3, 1, 0.3, 1)
 
 func deactivate_piercing():
 	is_piercing = false
 	pierce_timer = 0.0
 	pierce_count = 0
-	# 恢复正常颜色
-	modulate = Color(1, 1, 1, 1)
+	$OuterGlow.modulate = Color(1, 0.5, 0.2, 1)
+	$InnerGlow.modulate = Color(1, 0.9, 0.6, 1)
+	$Core.modulate = Color(1, 1, 0.95, 1)
+	$FireTrail.modulate = Color(1, 1, 1, 1)
 
 func apply_speed_boost():
 	current_speed_multiplier = max_speed_multiplier
