@@ -1,27 +1,36 @@
 [gd_scene format=3 uid="uid://b2kllwl6juoxs"]
 
-[ext_resource type="Script" path="res://scripts/components/Ball.gd" id="1_abc12"]
+[ext_resource type="Script" uid="uid://m0wijlyqnubu" path="res://scripts/components/Ball.gd" id="1_abc12"]
 [ext_resource type="PackedScene" uid="uid://c7firetrail" path="res://scenes/system/FireTrail.tscn" id="2_fire"]
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_1"]
-radius = 10.0
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_glow"]
+blend_mode = 1
 
-[sub_resource type="Gradient" id="Gradient_glow"]
-interpolation_mode = 0
-offsets = PackedFloat32Array(0, 0.2, 0.5, 1)
-colors = PackedColorArray(1, 0.8, 0.4, 1, 1, 0.5, 0.15, 0.8, 1, 0.3, 0.1, 0.4, 1, 0.2, 0.05, 0)
+[sub_resource type="Gradient" id="Gradient_outer"]
+offsets = PackedFloat32Array(0, 0.5, 0.8, 1)
+colors = PackedColorArray(1, 0.8, 0.4, 1, 1, 0.6, 0.2, 0.8, 1, 0.4, 0.1, 0.3, 1, 0.2, 0.05, 0)
 
-[sub_resource type="GradientTexture2D" id="GradientTexture2D_glow"]
-gradient = SubResource("Gradient_glow")
-width = 64
-height = 64
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_outer"]
+gradient = SubResource("Gradient_outer")
 fill = 1
 fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0.7803468, 0.17630059)
+
+[sub_resource type="Gradient" id="Gradient_inner"]
+offsets = PackedFloat32Array(0, 0.4, 0.7, 1)
+colors = PackedColorArray(1, 0.9, 0.6, 1, 1, 0.8, 0.4, 0.7, 1, 0.6, 0.2, 0.4, 1, 0.4, 0.1, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_inner"]
+gradient = SubResource("Gradient_inner")
+width = 48
+height = 48
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0.6069364, 0.33236995)
 
 [sub_resource type="Gradient" id="Gradient_core"]
-interpolation_mode = 0
-offsets = PackedFloat32Array(0, 0.5, 1)
-colors = PackedColorArray(1, 1, 1, 1, 1, 0.95, 0.8, 1, 1, 0.7, 0.3, 0.9)
+offsets = PackedFloat32Array(0, 0.3, 0.6, 1)
+colors = PackedColorArray(1, 1, 0.95, 1, 1, 0.95, 0.8, 0.8, 1, 0.8, 0.5, 0.5, 1, 0.6, 0.3, 0)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_core"]
 gradient = SubResource("Gradient_core")
@@ -29,34 +38,31 @@ width = 32
 height = 32
 fill = 1
 fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0.6820809, 0.632948)
 
-[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_glow"]
-blend_mode = 1
-shading_mode = 0
+[sub_resource type="CircleShape2D" id="CircleShape2D_1"]
 
-[node name="Ball" type="CharacterBody2D"]
+[node name="Ball" type="CharacterBody2D" unique_id=1608968085]
 script = ExtResource("1_abc12")
 
-[node name="OuterGlow" type="Sprite2D" parent="."]
-material = SubResource("CanvasItemMaterial_glow")
-position = Vector2(0, 0)
-texture = SubResource("GradientTexture2D_glow")
+[node name="OuterGlow" type="Sprite2D" parent="." unique_id=2133277133]
 modulate = Color(1, 0.5, 0.2, 1)
+material = SubResource("CanvasItemMaterial_glow")
 scale = Vector2(0.7, 0.7)
+texture = SubResource("GradientTexture2D_outer")
 
-[node name="InnerGlow" type="Sprite2D" parent="."]
-position = Vector2(0, 0)
-texture = SubResource("GradientTexture2D_core")
+[node name="InnerGlow" type="Sprite2D" parent="." unique_id=1743585770]
 modulate = Color(1, 0.9, 0.6, 1)
-scale = Vector2(0.45, 0.45)
+scale = Vector2(0.5, 0.5)
+texture = SubResource("GradientTexture2D_inner")
 
-[node name="Core" type="Sprite2D" parent="."]
-position = Vector2(0, 0)
-texture = SubResource("GradientTexture2D_core")
+[node name="Core" type="Sprite2D" parent="." unique_id=995666918]
 modulate = Color(1, 1, 0.95, 1)
-scale = Vector2(0.22, 0.22)
+scale = Vector2(0.3, 0.3)
+texture = SubResource("GradientTexture2D_core")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2053189812]
 shape = SubResource("CircleShape2D_1")
 
-[node name="FireTrail" parent="." instance=ExtResource("2_fire")]
+[node name="FireTrail" parent="." unique_id=2118353521 instance=ExtResource("2_fire")]
+collision_base_size = 0.0

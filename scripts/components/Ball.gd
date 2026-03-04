@@ -1,6 +1,6 @@
 extends CharacterBody2D
 
-var base_speed = 300
+var base_speed =450
 var current_speed_multiplier = 1.0
 var max_speed_multiplier = 2.0  # 200% 速度
 var speed_decay_rate = 0.5  # 每秒衰减 0.5 倍（2秒回到正常速度）
@@ -16,6 +16,7 @@ signal ball_fell
 signal hit_paddle
 
 func _ready():
+	add_to_group("balls")
 	var random_angle = randf_range(-PI / 3, PI / 3)
 	var direction = Vector2(sin(random_angle), -cos(random_angle))
 	velocity = direction * base_speed
@@ -86,8 +87,9 @@ func _physics_process(delta):
 		position.y = 10
 		velocity.y = abs(velocity.y)
 	
-	# 下边界掉落
-	if position.y > game_area_height + 20:
+	# 下边界掉落（低于挡板底部）
+	if position.y > 700:
+		remove_from_group("balls")
 		ball_fell.emit()
 		queue_free()
 

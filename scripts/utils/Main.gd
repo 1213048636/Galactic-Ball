@@ -13,7 +13,7 @@ var game_area_width = 640  # 左半边宽度
 
 # 砖块下移参数
 var brick_move_timer = 0.0
-var brick_move_interval = 10.0
+var brick_move_interval = 3.0
 var brick_move_speed = 0.5
 var brick_row_height = 35
 
@@ -203,11 +203,20 @@ func spawn_new_brick_row():
 
 func spawn_ball():
 	var game_area = $GameArea
-	var ball = ball_scene.instantiate()
-	ball.position = Vector2(game_area_width / 2, 580)
-	game_area.add_child(ball)
-	ball.connect("ball_fell", _on_ball_fell)
-	ball.connect("hit_paddle", _on_hit_paddle)
+	
+	# 生成第一个球
+	var ball1 = ball_scene.instantiate()
+	ball1.position = Vector2(game_area_width / 2 - 30, 580)
+	game_area.add_child(ball1)
+	ball1.connect("ball_fell", _on_ball_fell)
+	ball1.connect("hit_paddle", _on_hit_paddle)
+	
+	# 生成第二个球（测试多球情况）
+	var ball2 = ball_scene.instantiate()
+	ball2.position = Vector2(game_area_width / 2 + 30, 580)
+	game_area.add_child(ball2)
+	ball2.connect("ball_fell", _on_ball_fell)
+	ball2.connect("hit_paddle", _on_hit_paddle)
 
 func _on_hit_paddle():
 	screen_shake()
@@ -255,7 +264,15 @@ func screen_shake():
 	tween.tween_property(camera, "position", original_camera_pos, shake_duration / 3)
 
 func _on_ball_fell():
-	if not game_over:
+	# 检查是否还有球在场
+	var game_area = $GameArea
+	var ball_count = 0
+	for child in game_area.get_children():
+		if child.is_in_group("balls"):
+			ball_count += 1
+	
+	# 只有当所有球都掉完才游戏结束
+	if not game_over and ball_count == 0:
 		game_over = true
 		if game_over_overlay:
 			game_over_overlay.visible = true
