@@ -43,6 +43,8 @@ fill_to = Vector2(0.6820809, 0.632948)
 [sub_resource type="CircleShape2D" id="CircleShape2D_1"]
 
 [node name="Ball" type="CharacterBody2D" unique_id=1608968085]
+collision_layer = 2
+collision_mask = 5
 script = ExtResource("1_abc12")
 
 [node name="OuterGlow" type="Sprite2D" parent="." unique_id=2133277133]

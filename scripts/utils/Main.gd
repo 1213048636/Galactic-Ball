@@ -26,6 +26,10 @@ var is_using_skill_j = false
 var is_using_skill_k = false
 var is_using_skill_l = false
 
+# 自动发射球系统
+var auto_spawn_timer = 0.0
+var auto_spawn_interval = 1.0  # 每秒发射一个
+
 @onready var score_label = $InfoPanel/ScoreSection/ScoreLabel
 @onready var game_over_label = $InfoPanel/GameOverLabel
 @onready var camera = $Camera2D
@@ -47,6 +51,12 @@ func _process(delta):
 	
 	handle_skills(delta)
 	
+	# 自动发射球
+	auto_spawn_timer += delta
+	if auto_spawn_timer >= auto_spawn_interval:
+		auto_spawn_timer = 0.0
+		spawn_ball_at_paddle()
+	
 	brick_move_timer += delta
 	if brick_move_timer >= brick_move_interval:
 		brick_move_timer = 0.0
@@ -57,9 +67,9 @@ func handle_skills(delta):
 	var k_pressed = Input.is_action_pressed("skill_k")
 	var l_just_pressed = Input.is_action_just_pressed("skill_l")
 	
-	# 处理L键技能（瞬间清空能量条，清除最下面一排砖头）
+	# 处理L键技能（发射一颗新球）
 	if l_just_pressed and current_energy >= max_energy:
-		use_skill_l()
+		spawn_new_ball()
 	
 	if current_energy > 0:
 		is_using_skill_j = j_pressed
@@ -95,42 +105,27 @@ func handle_skills(delta):
 	
 	update_energy_display()
 
-func use_skill_l():
+func spawn_new_ball():
 	# 清空能量条
 	current_energy = 0.0
 	
-	# 找到并清除最下面一排砖头
+	# 发射一颗新球，从挡板中央发射
+	spawn_ball_at_paddle()
+	
+	# 播放发射特效
+	spawn_explosion(paddle.position + Vector2(0, -20))
+	screen_shake()
+
+func spawn_ball_at_paddle():
+	# 从挡板中央发射一颗新球
 	var game_area = $GameArea
-	var bricks = []
+	var new_ball = ball_scene.instantiate()
+	new_ball.position = paddle.position + Vector2(0, -20)
+	game_area.add_child(new_ball)
+	new_ball.connect("hit_paddle", _on_hit_paddle)
 	
-	# 收集所有砖头
-	for child in game_area.get_children():
-		if child.has_method("hit") and child.name != "Paddle" and child.name != "Ball":
-			bricks.append(child)
-	
-	if bricks.size() == 0:
-		return
-	
-	# 找到最下面一排的Y坐标
-	var max_y = bricks[0].position.y
-	for brick in bricks:
-		if brick.position.y > max_y:
-			max_y = brick.position.y
-	
-	# 清除最下面一排的砖头
-	var destroyed_count = 0
-	for brick in bricks:
-		if abs(brick.position.y - max_y) < 5:  # 允许小误差
-			spawn_explosion(brick.position)
-			brick.queue_free()
-			destroyed_count += 1
-	
-	# 增加分数
-	if destroyed_count > 0:
-		var points = destroyed_count * 10
-		score += points
-		score_label.text = str(score)
-		screen_shake()
+	# 设置竖直向上发射
+	new_ball.velocity = Vector2(0, -new_ball.base_speed)
 
 func update_energy_display():
 	if energy_bar:
@@ -190,6 +185,19 @@ func spawn_new_brick_row():
 	
 	var game_area = $GameArea
 	
+	# 计算当前应该生成的黄色砖块生命值
+	var yellow_health = calculate_yellow_brick_health()
+	
+	# 决定这一排生成多少个黄色砖块（1-3个）
+	var yellow_count = randi() % 3 + 1  # 1-3个
+	var yellow_positions = []
+	
+	# 随机选择黄色砖块的位置
+	while yellow_positions.size() < yellow_count:
+		var pos = randi() % columns
+		if not yellow_positions.has(pos):
+			yellow_positions.append(pos)
+	
 	for col in range(columns):
 		if randf() < 0.8:
 			var brick = brick_scene.instantiate()
@@ -198,8 +206,32 @@ func spawn_new_brick_row():
 				start_y
 			)
 			game_area.add_child(brick)
-			brick.set_random_color()
+			
+			# 检查是否是黄色砖块位置
+			if yellow_positions.has(col):
+				# 生成黄色砖块，带生命值
+				brick.set_yellow_brick(yellow_health)
+			else:
+				brick.set_random_color()
+			
 			brick.connect("brick_destroyed", _on_brick_destroyed.bind(brick.position))
+
+func calculate_yellow_brick_health() -> int:
+	# 计算当前应该生成的黄色砖块生命值
+	# 基于已经生成的行数，每行增加1.1倍（向下取整）
+	var game_area = $GameArea
+	var row_count = 0
+	
+	for child in game_area.get_children():
+		if child.has_method("hit") and child.name != "Paddle" and child.name != "Ball":
+			row_count += 1
+	
+	# 基础生命值2，每多一行增加1.1倍
+	var base_health = 2
+	var rows_generated = row_count / 8  # 假设每行8个砖块
+	var health = int(base_health * pow(1.1, rows_generated))
+	
+	return max(health, 2)  # 至少2点生命值
 
 func spawn_ball():
 	var game_area = $GameArea
@@ -208,14 +240,12 @@ func spawn_ball():
 	var ball1 = ball_scene.instantiate()
 	ball1.position = Vector2(game_area_width / 2 - 30, 580)
 	game_area.add_child(ball1)
-	ball1.connect("ball_fell", _on_ball_fell)
 	ball1.connect("hit_paddle", _on_hit_paddle)
 	
 	# 生成第二个球（测试多球情况）
 	var ball2 = ball_scene.instantiate()
 	ball2.position = Vector2(game_area_width / 2 + 30, 580)
 	game_area.add_child(ball2)
-	ball2.connect("ball_fell", _on_ball_fell)
 	ball2.connect("hit_paddle", _on_hit_paddle)
 
 func _on_hit_paddle():
@@ -264,19 +294,8 @@ func screen_shake():
 	tween.tween_property(camera, "position", original_camera_pos, shake_duration / 3)
 
 func _on_ball_fell():
-	# 检查是否还有球在场
-	var game_area = $GameArea
-	var ball_count = 0
-	for child in game_area.get_children():
-		if child.is_in_group("balls"):
-			ball_count += 1
-	
-	# 只有当所有球都掉完才游戏结束
-	if not game_over and ball_count == 0:
-		game_over = true
-		if game_over_overlay:
-			game_over_overlay.visible = true
-		screen_shake()
+	# 小球掉落不再导致游戏结束，改为重置小球
+	pass
 
 func restart_game():
 	# 重置游戏状态

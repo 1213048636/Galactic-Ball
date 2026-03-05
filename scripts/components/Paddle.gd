@@ -73,11 +73,18 @@ func update_paddle_size():
 	
 	if collision_shape:
 		var shape = collision_shape.shape
-		if shape is RectangleShape2D:
-			shape.size.x = current_width
-			collision_shape.position.x = 0
+		if shape is SegmentShape2D:
+			# 更新线段碰撞形状的长度
+			shape.a.x = -current_width / 2
+			shape.b.x = current_width / 2
+			# 保持在顶部
+			shape.a.y = -10
+			shape.b.y = -10
 
 func is_red_paddle() -> bool:
 	if color_rect:
 		return color_rect.color == skill_j_color
 	return false
+
+func get_current_velocity() -> Vector2:
+	return velocity

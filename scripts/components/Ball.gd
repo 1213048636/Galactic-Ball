@@ -41,7 +41,20 @@ func _physics_process(delta):
 		var normal = collision.get_normal()
 		
 		if collider.name == "Paddle":
-			velocity = velocity.bounce(normal)
+			# 根据挡板运动给小球增加水平速度
+			if collider.has_method("get_current_velocity"):
+				var paddle_velocity = collider.get_current_velocity()
+				# 将挡板的水平速度传递给小球（传递系数0.5）
+				velocity.x += paddle_velocity.x * 0.5
+			
+			# 确保小球向上反弹
+			velocity.y = -abs(velocity.y)
+			
+			# 保持速度大小不变
+			var current_speed = velocity.length()
+			if current_speed > 0:
+				velocity = velocity.normalized() * max(current_speed, base_speed * current_speed_multiplier)
+			
 			hit_paddle.emit()
 			
 			# 检查是否碰到红色挡板
@@ -87,11 +100,8 @@ func _physics_process(delta):
 		position.y = 10
 		velocity.y = abs(velocity.y)
 	
-	# 下边界掉落（低于挡板底部）
-	if position.y > 700:
-		remove_from_group("balls")
-		ball_fell.emit()
-		queue_free()
+	# 下边界掉落（低于挡板底部）- 小球继续下落不做处理
+	pass
 
 func is_red_brick(color: Color) -> bool:
 	# 红色砖块：R值高，G和B值低
@@ -122,3 +132,15 @@ func deactivate_piercing():
 func apply_speed_boost():
 	current_speed_multiplier = max_speed_multiplier
 	velocity = velocity.normalized() * base_speed * current_speed_multiplier
+
+func reset_ball():
+	# 重置小球到挡板上方
+	position = Vector2(320, 580)
+	# 随机发射角度
+	var random_angle = randf_range(-PI / 3, PI / 3)
+	var direction = Vector2(sin(random_angle), -cos(random_angle))
+	velocity = direction * base_speed
+	# 重置速度倍数和穿透状态
+	current_speed_multiplier = 1.0
+	if is_piercing:
+		deactivate_piercing()
