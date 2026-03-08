@@ -1,5 +1,7 @@
 extends Node2D
 
+const SaveManager = preload("res://scripts/utils/SaveManager.gd")
+
 var ball_scene = preload("res://scenes/actors/player/Ball.tscn")
 var brick_scene = preload("res://scenes/actors/enemies/Brick.tscn")
 var explosion_scene = preload("res://scenes/system/ExplosionParticles.tscn")
@@ -7,6 +9,12 @@ var explosion_scene = preload("res://scenes/system/ExplosionParticles.tscn")
 var score = 0
 var game_over = false
 var original_camera_pos = Vector2.ZERO
+
+# 存档管理器
+var save_manager: SaveManager
+
+# 最高分显示标签
+@onready var high_score_label = $InfoPanel/HighScoreLabel
 
 # 游戏区域设置
 var game_area_width = 640  # 左半边宽度
@@ -38,10 +46,15 @@ var auto_spawn_interval = 1.0  # 每秒发射一个
 @onready var game_over_overlay = $GameArea/GameOverOverlay
 
 func _ready():
+	# 初始化存档管理器
+	save_manager = SaveManager.new()
+	add_child(save_manager)
+	
 	original_camera_pos = camera.position
 	create_bricks()
 	spawn_ball()
 	update_energy_display()
+	update_high_score_display()
 
 func _process(delta):
 	if game_over:
@@ -67,9 +80,9 @@ func handle_skills(delta):
 	var k_pressed = Input.is_action_pressed("skill_k")
 	var l_just_pressed = Input.is_action_just_pressed("skill_l")
 	
-	# 处理L键技能（发射一颗新球）
+	# 处理L键技能（将所有黄色砖块变成白色）
 	if l_just_pressed and current_energy >= max_energy:
-		spawn_new_ball()
+		convert_yellow_bricks_to_white()
 	
 	if current_energy > 0:
 		is_using_skill_j = j_pressed
@@ -116,6 +129,26 @@ func spawn_new_ball():
 	spawn_explosion(paddle.position + Vector2(0, -20))
 	screen_shake()
 
+func convert_yellow_bricks_to_white():
+	# 清空能量条
+	current_energy = 0.0
+	
+	# 将所有黄色砖块变成白色
+	var game_area = $GameArea
+	var converted_count = 0
+	
+	for child in game_area.get_children():
+		if child.has_method("hit") and child.name != "Paddle":
+			# 检查是否是黄色砖块
+			if child.is_yellow_brick():
+				child.convert_to_white()
+				converted_count += 1
+	
+	# 如果有砖块被转换，播放特效
+	if converted_count > 0:
+		screen_shake()
+		print("转换了 ", converted_count, " 个黄色砖块为白色")
+
 func spawn_ball_at_paddle():
 	# 从挡板中央发射一颗新球
 	var game_area = $GameArea
@@ -140,7 +173,7 @@ func create_bricks():
 	
 	# 计算总宽度并居中
 	var total_width = columns * brick_width + (columns - 1) * spacing
-	var start_x = (640 - total_width) / 2  # 在游戏区域(640px)内居中
+	var start_x = (640.0 - total_width) / 2.0  # 在游戏区域(640px)内居中
 	var start_y = 60
 	
 	var game_area = $GameArea
@@ -158,29 +191,30 @@ func create_bricks():
 
 func move_bricks_down():
 	var game_area = $GameArea
-	var brick_count = 0
+	var _brick_count = 0
 	for child in game_area.get_children():
 		if child.has_method("hit") and child.name != "Paddle" and child.name != "Ball":
 			child.position.y += brick_row_height
-			brick_count += 1
+			_brick_count += 1
 			
 			if child.position.y >= 580:
 				game_over = true
 				if game_over_overlay:
 					game_over_overlay.visible = true
+				check_and_save_high_score()
 				return
 	
 	spawn_new_brick_row()
 
 func spawn_new_brick_row():
 	var brick_width = 60
-	var brick_height = 25
+	var _brick_height = 25
 	var spacing = 10
 	var columns = 8  # 8列
 	
 	# 计算总宽度并居中
 	var total_width = columns * brick_width + (columns - 1) * spacing
-	var start_x = (640 - total_width) / 2
+	var start_x = (640.0 - total_width) / 2.0
 	var start_y = 60
 	
 	var game_area = $GameArea
@@ -218,18 +252,16 @@ func spawn_new_brick_row():
 
 func calculate_yellow_brick_health() -> int:
 	# 计算当前应该生成的黄色砖块生命值
-	# 基于已经生成的行数，每行增加1.1倍（向下取整）
-	var game_area = $GameArea
-	var row_count = 0
+	# 基于当前分数，分数越高生命值越高
 	
-	for child in game_area.get_children():
-		if child.has_method("hit") and child.name != "Paddle" and child.name != "Ball":
-			row_count += 1
-	
-	# 基础生命值2，每多一行增加1.1倍
+	# 基础生命值2
 	var base_health = 2
-	var rows_generated = row_count / 8  # 假设每行8个砖块
-	var health = int(base_health * pow(1.1, rows_generated))
+	
+	# 每100分增加1点生命值
+	var bonus_health = score / 100.0
+	
+	# 计算总生命值
+	var health = base_health + bonus_health
 	
 	return max(health, 2)  # 至少2点生命值
 
@@ -238,13 +270,13 @@ func spawn_ball():
 	
 	# 生成第一个球
 	var ball1 = ball_scene.instantiate()
-	ball1.position = Vector2(game_area_width / 2 - 30, 580)
+	ball1.position = Vector2(game_area_width / 2.0 - 30, 580)
 	game_area.add_child(ball1)
 	ball1.connect("hit_paddle", _on_hit_paddle)
 	
 	# 生成第二个球（测试多球情况）
 	var ball2 = ball_scene.instantiate()
-	ball2.position = Vector2(game_area_width / 2 + 30, 580)
+	ball2.position = Vector2(game_area_width / 2.0 + 30, 580)
 	game_area.add_child(ball2)
 	ball2.connect("hit_paddle", _on_hit_paddle)
 
@@ -309,10 +341,16 @@ func restart_game():
 	if game_over_overlay:
 		game_over_overlay.visible = false
 	
-	# 清除所有砖块
+	# 清除所有砖块和球
 	var game_area = $GameArea
 	for child in game_area.get_children():
-		if child.has_method("hit") or child.name == "Ball" or child.name.find("Explosion") != -1 or child is Label:
+		# 清除砖块（有hit方法）、球（CharacterBody2D类型且不是Paddle）、爆炸效果、分数弹出标签
+		var is_ball = child is CharacterBody2D and child.name != "Paddle"
+		var is_brick = child.has_method("hit") and child.name != "Paddle"
+		var is_explosion = child.name.find("Explosion") != -1
+		var is_popup_label = child is Label and child.name != "WarningLine"
+		
+		if is_brick or is_ball or is_explosion or is_popup_label:
 			child.queue_free()
 	
 	# 重置挡板
@@ -330,3 +368,13 @@ func restart_game():
 	
 	# 重置计时器
 	brick_move_timer = 0.0
+
+func update_high_score_display():
+	if save_manager and high_score_label:
+		var high_score = save_manager.get_high_score()
+		high_score_label.text = "最高分: " + str(high_score)
+
+func check_and_save_high_score():
+	if save_manager:
+		save_manager.set_high_score(score)
+		update_high_score_display()

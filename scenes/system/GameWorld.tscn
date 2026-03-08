@@ -129,6 +129,18 @@ theme_override_fonts/font = ExtResource("4_font")
 theme_override_font_sizes/font_size = 48
 text = "0"
 
+[node name="HighScoreLabel" type="Label" parent="InfoPanel" unique_id=463007724]
+layout_mode = 0
+offset_left = 40.0
+offset_top = 130.0
+offset_right = 600.0
+offset_bottom = 170.0
+theme_override_colors/font_color = Color(1, 0.84, 0, 1)
+theme_override_fonts/font = ExtResource("4_font")
+theme_override_font_sizes/font_size = 28
+text = "最高分: 0"
+horizontal_alignment = 1
+
 [node name="EnergySection" type="Control" parent="InfoPanel" unique_id=1667369206]
 anchors_preset = 0
 offset_left = 40.0
@@ -199,7 +211,7 @@ offset_bottom = 150.0
 theme_override_colors/font_color = Color(0.3, 0.6, 0.9, 1)
 theme_override_fonts/font = ExtResource("4_font")
 theme_override_font_sizes/font_size = 20
-text = "[L] 发射新球 - 满能量可用"
+text = "[L] 黄砖变白 - 满能量可用"
 
 [node name="BricksSection" type="Control" parent="InfoPanel" unique_id=980542975]
 anchors_preset = 0
@@ -256,95 +268,6 @@ theme_override_colors/font_color = Color(0.95, 0.85, 0.1, 1)
 theme_override_fonts/font = ExtResource("4_font")
 theme_override_font_sizes/font_size = 18
 text = "黄色 - 多生命值（随关卡提升）"
-
-[node name="BrickPreview" type="Control" parent="InfoPanel" unique_id=1360825911]
-anchors_preset = 0
-offset_left = 680.0
-offset_top = 100.0
-offset_right = 1280.0
-offset_bottom = 400.0
-
-[node name="PreviewTitle" type="Label" parent="InfoPanel/BrickPreview" unique_id=375762913]
-layout_mode = 0
-offset_left = 40.0
-offset_right = 200.0
-offset_bottom = 40.0
-theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
-theme_override_fonts/font = ExtResource("4_font")
-theme_override_font_sizes/font_size = 24
-text = "砖块预览"
-
-[node name="RedBrick1" type="ColorRect" parent="InfoPanel/BrickPreview" unique_id=1018280665]
-layout_mode = 0
-offset_left = 40.0
-offset_top = 50.0
-offset_right = 100.0
-offset_bottom = 75.0
-color = Color(0.9, 0.3, 0.3, 1)
-
-[node name="RedBrick2" type="ColorRect" parent="InfoPanel/BrickPreview" unique_id=1983666530]
-layout_mode = 0
-offset_left = 110.0
-offset_top = 50.0
-offset_right = 170.0
-offset_bottom = 75.0
-color = Color(0.9, 0.3, 0.3, 1)
-
-[node name="RedBrick3" type="ColorRect" parent="InfoPanel/BrickPreview" unique_id=996742867]
-layout_mode = 0
-offset_left = 180.0
-offset_top = 50.0
-offset_right = 240.0
-offset_bottom = 75.0
-color = Color(0.9, 0.3, 0.3, 1)
-
-[node name="GreenBrick1" type="ColorRect" parent="InfoPanel/BrickPreview" unique_id=508072072]
-layout_mode = 0
-offset_left = 40.0
-offset_top = 85.0
-offset_right = 100.0
-offset_bottom = 110.0
-color = Color(0.3, 0.9, 0.3, 1)
-
-[node name="GreenBrick2" type="ColorRect" parent="InfoPanel/BrickPreview" unique_id=1576147186]
-layout_mode = 0
-offset_left = 110.0
-offset_top = 85.0
-offset_right = 170.0
-offset_bottom = 110.0
-color = Color(0.3, 0.9, 0.3, 1)
-
-[node name="GreenBrick3" type="ColorRect" parent="InfoPanel/BrickPreview" unique_id=140534803]
-layout_mode = 0
-offset_left = 180.0
-offset_top = 85.0
-offset_right = 240.0
-offset_bottom = 110.0
-color = Color(0.3, 0.9, 0.3, 1)
-
-[node name="WhiteBrick1" type="ColorRect" parent="InfoPanel/BrickPreview" unique_id=314094296]
-layout_mode = 0
-offset_left = 40.0
-offset_top = 120.0
-offset_right = 100.0
-offset_bottom = 145.0
-color = Color(0.9, 0.9, 0.9, 1)
-
-[node name="WhiteBrick2" type="ColorRect" parent="InfoPanel/BrickPreview" unique_id=1949646796]
-layout_mode = 0
-offset_left = 110.0
-offset_top = 120.0
-offset_right = 170.0
-offset_bottom = 145.0
-color = Color(0.9, 0.9, 0.9, 1)
-
-[node name="WhiteBrick3" type="ColorRect" parent="InfoPanel/BrickPreview" unique_id=974938790]
-layout_mode = 0
-offset_left = 180.0
-offset_top = 120.0
-offset_right = 240.0
-offset_bottom = 145.0
-color = Color(0.9, 0.9, 0.9, 1)
 
 [node name="Characters" type="Node2D" parent="InfoPanel" unique_id=1742483879]
 position = Vector2(640, 500)

@@ -78,6 +78,18 @@ func get_brick_color() -> Color:
 func is_yellow_brick() -> bool:
 	return is_yellow
 
+func convert_to_white():
+	# 将黄色砖块转换为白色
+	if is_yellow:
+		is_yellow = false
+		current_color = white_color
+		max_health = 1
+		current_health = 1
+		update_color_display()
+		update_health_display()
+		# 播放转换特效
+		spawn_glass_shards()
+
 func hit():
 	if is_yellow:
 		# 黄色砖块处理生命值
