@@ -4,7 +4,11 @@
 [ext_resource type="PackedScene" uid="uid://c8yvxg3ulq3a" path="res://scenes/actors/player/Paddle.tscn" id="2_paddle"]
 [ext_resource type="PackedScene" uid="uid://dastarbg" path="res://scenes/system/StarBackground.tscn" id="3_starbg"]
 [ext_resource type="FontFile" uid="uid://bxpc8bu57qflq" path="res://assets/fonts/ZCOOLQingKeHuangYou-Regular.ttf" id="4_font"]
-[ext_resource type="Script" uid="uid://nwbqc8ar6jyc" path="res://scripts/utils/CharacterPortrait.gd" id="5_portrait"]
+[ext_resource type="AudioStream" uid="uid://m8aapknbb0fg" path="res://assets/audio/theme.mp3" id="6_bgm"]
+[ext_resource type="Texture2D" uid="uid://bby8t3ti3rj43" path="res://assets/images/Alex.png" id="7_alex"]
+[ext_resource type="Texture2D" uid="uid://b73woqwjo4wqr" path="res://assets/images/Ben.png" id="8_ben"]
+[ext_resource type="Texture2D" uid="uid://br35r2kk0q07f" path="res://assets/images/Cathy.png" id="9_cathy"]
+[ext_resource type="Texture2D" uid="uid://djiprfog378e8" path="res://assets/images/Dave.png" id="10_dave"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_energy_bg"]
 bg_color = Color(0.1, 0.1, 0.2, 0.8)
@@ -243,7 +247,7 @@ theme_override_fonts/font = ExtResource("4_font")
 theme_override_font_sizes/font_size = 18
 text = "白色 - 普通"
 
-[node name="YellowBrick" type="Label" parent="InfoPanel/BricksSection"]
+[node name="YellowBrick" type="Label" parent="InfoPanel/BricksSection" unique_id=61107130]
 layout_mode = 0
 offset_top = 150.0
 offset_right = 560.0
@@ -342,9 +346,29 @@ offset_right = 240.0
 offset_bottom = 145.0
 color = Color(0.9, 0.9, 0.9, 1)
 
-[node name="CharacterPortrait" type="Node2D" parent="InfoPanel" unique_id=776693571]
-position = Vector2(415, 501)
-script = ExtResource("5_portrait")
+[node name="Characters" type="Node2D" parent="InfoPanel" unique_id=1742483879]
+position = Vector2(640, 500)
+
+[node name="Alex" type="Sprite2D" parent="InfoPanel/Characters" unique_id=541657738]
+position = Vector2(-317, 100.00004)
+scale = Vector2(0.11141358, 0.11141358)
+texture = ExtResource("7_alex")
+
+[node name="Ben" type="Sprite2D" parent="InfoPanel/Characters" unique_id=1657475364]
+position = Vector2(-147, 82.999985)
+scale = Vector2(0.10734868, 0.10734868)
+texture = ExtResource("8_ben")
+flip_h = true
+
+[node name="Cathy" type="Sprite2D" parent="InfoPanel/Characters" unique_id=703476548]
+position = Vector2(-317.7, -106.69994)
+scale = Vector2(0.20566398, 0.20566398)
+texture = ExtResource("9_cathy")
+
+[node name="Dave" type="Sprite2D" parent="InfoPanel/Characters" unique_id=1190937086]
+position = Vector2(-147, -89.99999)
+scale = Vector2(0.054858446, 0.054858446)
+texture = ExtResource("10_dave")
 
 [node name="GameOverLabel" type="Label" parent="InfoPanel" unique_id=536640794]
 visible = false
@@ -360,3 +384,8 @@ text = "游戏结束
 按 R 重新开始"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="BGM" type="AudioStreamPlayer" parent="." unique_id=770887137]
+stream = ExtResource("6_bgm")
+volume_db = -10.0
+autoplay = true
